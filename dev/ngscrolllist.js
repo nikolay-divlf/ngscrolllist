@@ -107,13 +107,21 @@
                 $(base_options.self).data('ngscrolllist_add_class_block', true);
                 $(base_options.self).addClass(base_options.lining.class_block);
             }
-            $(base_options.self).wrap(
-                strCollectElement(
-                    base_options.lining.name_selector_parent_block, 
-                    base_options.lining.attrs_parent_block, 
-                    (base_options.lining.class_parent_block + ' ' + base_options.lining.js_class_parent_block).trim()
-                )
-            );
+            if (!$(base_options.self).parent().is('.' + base_options.lining.js_class_parent_block)) {
+                $(base_options.self).data('ngscrolllist_add_wrap', true);
+                $(base_options.self).wrap(
+                    strCollectElement(
+                        base_options.lining.name_selector_parent_block, 
+                        base_options.lining.attrs_parent_block, 
+                        (base_options.lining.class_parent_block + ' ' + base_options.lining.js_class_parent_block).trim()
+                    )
+                );
+            } else {
+                if (!$(base_options.self).parent().is('.' + base_options.lining.class_parent_block)) {
+                    $(base_options.self).parent().addClass(base_options.lining.class_parent_block);
+                    $(base_options.self).data('ngscrolllist_add_class_parent_block', true);
+                }
+            }
             if (base_options.active_nav_btn && base_options.display_nav_btn) {
                 base_options.nav_btn.prev.elem = $(strCollectElement(
                     base_options.lining.name_selector_btn_prev,
@@ -348,8 +356,11 @@
                     base_options.events.update('fun_update', base_options.getOptions());
                 }, 
                 destroy: function() {
-                    if ($(base_options.self).parent().is('.' + base_options.lining.js_class_parent_block)) {
+                    if ($(base_options.self).parent().is('.' + base_options.lining.js_class_parent_block) && $(base_options.self).data('ngscrolllist_add_wrap')) {
                         $(base_options.self).unwrap();
+                        $(base_options.self).removeData('ngscrolllist_add_wrap')
+                    } else if (!$(base_options.self).data('ngscrolllist_add_wrap')) {
+                        $(base_options.self).parent().removeClass(base_options.lining.class_parent_block_loader);
                     }
                     if ($(base_options.nav_btn.prev.elem).length) {
                         $(base_options.nav_btn.prev.elem).remove();
@@ -360,6 +371,10 @@
                     if ($(base_options.self).data('ngscrolllist_add_class_block')) {
                         $(base_options.self).removeClass(base_options.lining.class_block);
                         $(base_options.self).removeData('ngscrolllist_add_class_block');
+                    }
+                    if ($(base_options.self).data('ngscrolllist_add_class_parent_block')) {
+                        $(base_options.self).parent().removeClass(base_options.lining.class_parent_block);
+                        $(base_options.self).removeData('ngscrolllist_add_class_parent_block');
                     }
                     $(base_options.self).removeClass(base_options.lining.class_block_loader);
                     $(base_options.self).removeData('initNgScrolllist');
