@@ -1,0 +1,19 @@
+.ngscrolllist_parent-block {
+    display: flex;
+    overflow: hidden;
+    overflow-x: auto;
+    scrollbar-width: none;
+    ms-scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
+.ngscrolllist_parent-block::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+.ngscrolllist {
+    display: flex;
+    white-space: nowrap;
+    padding-left: 0;
+    margin-bottom: 0;
+}

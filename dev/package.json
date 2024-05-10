@@ -1,0 +1,17 @@
+{
+  "name": "testwebpack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "watch": "webpack --progress --colors --watch"
+  },
+  "author": "divleaf",
+  "license": "ISC",
+  "devDependencies": {
+    "jquery": "^3.5.1",
+    "webpack": "^4.44.2"
+  }
+}
