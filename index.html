@@ -6,16 +6,19 @@
 	<title>Scroll list</title>
 	<script src="assets/jquery.min.js"></script>
 	<script src="assets/ngscrolllist.min.js"></script>
-	<link rel="stylesheet" href="assets/ngscrolllist.css">
 	<style>
 		* {
 			box-sizing: border-box;
 		}
-		.ngscrolllist li {
+		.ngscrolllist > li,
+		.ngscrolllist > div {
     		margin-bottom: 15px;
 			list-style: none;
 		}
+		.ngscrolllist div > div,
+		.ngscrolllist div > a,
 		.ngscrolllist li > div {
+			display: inline-block;
 			border: 1px solid #a0bde9;
 			padding: 7px 13px;
 			background: #d6ffe3;
@@ -24,6 +27,37 @@
 </head>
 <body>
 	<div>
+		<div class="ngscrolllist_parent-block js-ngscrolllist_parent-block">
+			<ul class="ngscrolllist js-ngscrolllist">
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+				<li><div>Test text</div></li>
+			</ul>
+		</div>
+		
 		<ul class="ngscrolllist js-ngscrolllist">
 			<li><div>Test text</div></li>
 			<li><div>Test text</div></li>
@@ -52,44 +86,47 @@
 			<li><div>Test text</div></li>
 			<li><div>Test text</div></li>
 		</ul>
-		<ul class="ngscrolllist js-ngscrolllist">
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-			<li><div>Test text</div></li>
-		</ul>
+
+		<br><br>
+
+		<div class="ngscrolllist js-ngscrolllist">
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+			<div><a href="#">Test text</a></div>
+		</div>
 	</div>
 
-	<script type="text/javascript">
+	<script>
 		var conf = $('.js-ngscrolllist').ngscrolllist();
 		//conf[0].ngscrolllist.destroy();
 		//$('.js-ngscrolllist:eq(0)').ngscrolllist({nav_btn: {next: {items_move: 3}}});
         //var conf = $('.js-ngscrolllist:eq(0)').ngscrolllist({speed_scroll: 1000});
 		//var conf = $('.js-ngscrolllist:eq(1)').ngscrolllist({speed_scroll: 200});
-		conf[0].ngscrolllist.setOptions({items_move: 3, events: {update: function(name_update) {console.log(name_update)}}});
-		console.log(conf[1].ngscrolllist.getOptions());
+		//conf[0].ngscrolllist.setOptions({items_move: 3});
+		//console.log(conf[1].ngscrolllist.getOptions());
 	</script>
 </body>
 </html>
