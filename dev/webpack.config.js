@@ -1,25 +1,36 @@
 const path = require('path');
 const webpack = require('webpack');
+//const fs = require('fs');
 
 module.exports = {
     context: __dirname + '/',
     entry: {
-        ngscrolllist: './ngscrolllist.js',
+        'ngscrolllist.min': './plugin/ngscrolllist.js',
     },
     output: {
-        filename: '[name].min.js',
-        path: path.resolve(__dirname, './../assets'),
-        //library: 'global', //вывести в глобальную переменную код
+        filename: '[name].js',
+        path: path.resolve(__dirname, './../public'),
     },
     externals: {
-        prestashop: 'prestashop',
         $: '$',
         jquery: 'jQuery',
         Popper: ['popper.js', 'default']
     },
+    optimization: {
+        minimize: true,
+    },
     plugins: [
-        new webpack.ContextReplacementPlugin(/node_modules\/moment\/locale/, /ru|en-gb/), //указываем какие файлы подгружать модулем "moment"
+        new webpack.ContextReplacementPlugin(/node_modules\/moment\/locale/, /ru|en-gb/),
+        //new webpack.BannerPlugin(fs.readFileSync('./../LICENSE', 'utf8')),
+        new webpack.BannerPlugin(
+            {
+                banner: '/**! \n' +
+                '* ngscrolllist v1.0 | divleaf.ru | https://github.com/nikolay-divlf/ngscrolllist\n' +
+                '* @author Goryachev Nikolay\n' +
+                '* @copyright NG 29-08-2025\n' +
+                '* @license MIT \n*/',
+                raw: true,
+            }
+        ),
     ]
-    //watch: true, //проверяется на изменение и выполняется перезборка
-    //devtool: 'cheap-inline-module-source-map',
 };

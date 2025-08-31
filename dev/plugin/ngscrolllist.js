@@ -1,6 +1,3 @@
-/**! ngscrolllist - v1.0.0
-* https://divleaf.ru
-* Copyright (c) 2024-2025 Goryachev Nikolay; */
 (function($){
     jQuery.fn.ngscrolllist = function(options) {
         options = options == undefined ? {} : options;
@@ -12,10 +9,10 @@
                     setOptionsBefore: function(options) {},
                     setOptionsAfter: function(options) {},
                     getOptions: function() {},
-                    clickScrollLeftBefore: function(elem, elem_parent) {},
-                    clickScrollLeftAfter: function(elem, elem_parent) {},
-                    clickScrollRightBefore: function(elem, elem_parent) {},
-                    clickScrollRightAfter: function(elem, elem_parent) {},
+                    clickScrollLeftBefore: function(event, elem, elem_parent) {},
+                    clickScrollLeftAfter: function(event, elem, elem_parent) {},
+                    clickScrollRightBefore: function(event, elem, elem_parent) {},
+                    clickScrollRightAfter: function(event, elem, elem_parent) {},
                     mousedown: function(event, elem) {},
                     mousemove: function(event, elem) {},
                     mouseup: function (event, elem) {},
@@ -47,6 +44,7 @@
                 },
                 check_init: true, // check initialization to re-run the plugin for the element
                 items_move: 1,
+                accuracy_element: true,
                 start_index: 0,
                 start_index_auto: false,
                 start_index_time: 250,
@@ -345,12 +343,14 @@
                 if (base_options.active_nav_btn) {
                     var elem_btn_prev = getElemBtnNavPrev();
                     var elem_parent = $(base_options.self).parent();
-                    elem_btn_prev.on('click', function() {
+                    elem_btn_prev.on('click', function(event) {
+                        event.preventDefault();
                         if ($(base_options.self).data('initNgScrolllist')) {
-                            base_options.events.clickScrollLeftBefore(elem_btn_prev, elem_parent);
+                            base_options.events.clickScrollLeftBefore(event, elem_btn_prev, elem_parent);
                             var x_left = elem_parent.offset().left;
                             var break_each = false;
                             $(base_options.self).children().each(function(index) {
+                                var elem_prev = $(this);
                                 var x_elem_left = $(this).offset().left;
                                 var x_elem_width = x_elem_left + $(this).outerWidth(true);
                                 if (x_elem_width + 1 >= x_left && x_elem_left + 1 < x_left && !break_each) {
@@ -364,6 +364,7 @@
                                                 var get_elem_child = $(base_options.self).children().eq($(this).index() - index_prev);
                                                 if (get_elem_child.length > 0) {
                                                     x_elem_left = get_elem_child.offset().left;
+                                                    elem_prev = get_elem_child;
                                                     break;
                                                 }
                                             }
@@ -373,6 +374,26 @@
                                     var left_box = $(base_options.self).offset().left;
                                     var width_left = left_content - left_box;
                                     var x_right = x_left - x_elem_left;
+
+                                    if (!base_options.accuracy_element && parseInt(elem_parent.scrollLeft()) == parseInt(width_left)
+                                        || !base_options.accuracy_element && parseInt(elem_parent.scrollLeft()) == parseInt(width_left) + 1) {
+                                        if (parseInt(elem_prev.outerWidth(true)) > parseInt(x_right) && elem_prev.prev().length > 0) {
+                                            if (!$(elem_prev.prev()).is(':hidden')) {
+                                                x_right = x_right + elem_prev.prev().outerWidth(true);
+                                            } else {
+                                                var search_elem = undefined;
+                                                $(elem_prev.parent().find(' > *').get().reverse()).each(function() {
+                                                    if (elem_prev.prev().index() < $(this).index() && !search_elem && !$(this).is(':hidden')) {
+                                                        search_elem = $(this);
+                                                    }
+                                                });
+                                                if (search_elem) {
+                                                    x_right = x_right + search_elem.outerWidth(true);
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     var scroll_left = width_left - x_right;
                                     var animate_properties = base_options.animate.properties;
                                     animate_properties['scrollLeft'] = scroll_left;
@@ -380,7 +401,7 @@
                                     break_each = true;
                                 }
                             });
-                            base_options.events.clickScrollLeftAfter(elem_btn_prev, elem_parent);
+                            base_options.events.clickScrollLeftAfter(event, elem_btn_prev, elem_parent);
                         }
                     });
                 }
@@ -390,12 +411,14 @@
                 if (base_options.active_nav_btn) {
                     var elem_btn_next = getElemBtnNavNext();
                     var elem_parent = $(base_options.self).parent();
-                    elem_btn_next.on('click', function() {
+                    elem_btn_next.on('click', function(event) {
+                        event.preventDefault();
                         if ($(base_options.self).data('initNgScrolllist')) {
-                            base_options.events.clickScrollRightBefore(elem_btn_next, elem_parent);
+                            base_options.events.clickScrollRightBefore(event, elem_btn_next, elem_parent);
                             var x_right = elem_parent.offset().left + elem_parent.outerWidth(true);
                             var break_each = false;
                             $(base_options.self).children().each(function() {
+                                var elem_next = $(this);
                                 var x_elem_right = $(this).offset().left + $(this).outerWidth(true);
                                 if (x_right < x_elem_right - 1 && !break_each) {
                                     var items_move = base_options.items_move;
@@ -407,6 +430,7 @@
                                             var get_elem_child = $(base_options.self).children().eq($(this).index() + index_next);
                                             if (get_elem_child.length > 0) {
                                                 x_elem_right = get_elem_child.offset().left + get_elem_child.outerWidth(true);
+                                                elem_next = get_elem_child;
                                             }
                                         }
                                     }
@@ -414,6 +438,28 @@
                                     var left_box = $(base_options.self).offset().left;
                                     var width_left = left_content - left_box;
                                     var x_left = x_elem_right - x_right;
+
+                                    if (!base_options.accuracy_element && parseInt(elem_parent.scrollLeft()) == parseInt(width_left)
+                                        || !base_options.accuracy_element && parseInt(elem_parent.scrollLeft()) == parseInt(width_left) + 1) {
+                                        if (parseInt(elem_next.outerWidth(true)) > parseInt(x_left) && elem_next.next().length > 0) {
+                                            if (!$(elem_next.next()).is(':hidden')) {
+                                                x_left = x_left + elem_next.next().outerWidth(
+                                                    parseInt(elem_next.next().css('margin-right')) > 0 ? false : true
+                                                );
+                                            } else {
+                                                var search_elem = undefined;
+                                                elem_next.parent().find(' > *').each(function() {
+                                                    if (elem_next.next().index() > $(this).index() && !search_elem && !$(this).is(':hidden')) {
+                                                        search_elem = $(this);
+                                                    }
+                                                });
+                                                if (search_elem) {
+                                                    x_left = x_left + search_elem.outerWidth(true);
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     var scroll_left = width_left + x_left + 1;
                                     var animate_properties = base_options.animate.properties;
                                     animate_properties['scrollLeft'] = scroll_left;
@@ -421,7 +467,7 @@
                                     break_each = true;
                                 }
                             });
-                            base_options.events.clickScrollRightAfter(elem_btn_next, elem_parent);
+                            base_options.events.clickScrollRightAfter(event, elem_btn_next, elem_parent);
                         }
                     });
                 }
